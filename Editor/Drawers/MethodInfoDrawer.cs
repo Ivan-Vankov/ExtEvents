@@ -274,14 +274,14 @@
             for (int i = 0; i < parameters.Length; i++)
             {
                 var argProp = serializedArgsProp.GetArrayElementAtIndex(i);
-                InitializeArgumentProperty(argProp, parameters[i].ParameterType);
+                InitializeArgumentProperty(argProp, parameters[i].ParameterType, i);
             }
 
             PersistentListenerDrawer.Reinitialize(listenerProperty);
             ExtEventDrawer.ResetListCache(listenerProperty.GetParent().GetParent());
         }
 
-        private static void InitializeArgumentProperty(SerializedProperty argumentProp, Type type)
+        private static void InitializeArgumentProperty(SerializedProperty argumentProp, Type type, int index)
         {
             // set target type
             {
@@ -300,25 +300,38 @@
             int matchingParamIndex = -1;
             bool exactMatch = false;
 
-            for (int i = 0; i < extEventInfo.ParamTypes.Length; i++)
-            {
+            bool MatchParam(int i) {
                 var eventParamType = extEventInfo.ParamTypes[i];
 
-                if (eventParamType.IsAssignableFrom(type))
-                {
+                if (eventParamType.IsAssignableFrom(type)) {
                     exactMatch = true;
                     matchingParamIndex = i;
-                    break;
+                    return true;
                 }
 
-                if (Converter.ExistsForTypes(eventParamType, type))
-                {
+                if (Converter.ExistsForTypes(eventParamType, type)) {
                     matchingParamIndex = i;
-                    break;
+                    return true;
                 }
+                return false;
+            }
+
+            if (index >= 0 && index < extEventInfo.ParamTypes.Length) {
+                MatchParam(index);
             }
 
             bool matchingParamFound = matchingParamIndex != -1;
+            if (!matchingParamFound) {
+                for (int i = 0; i < extEventInfo.ParamTypes.Length; i++) {
+                    if (i == index)
+                        continue;
+
+                    if (MatchParam(i))
+                        break;
+                }
+            }
+
+            matchingParamFound = matchingParamIndex != -1;
 
             argumentProp.FindPropertyRelative(nameof(PersistentArgument._isSerialized)).boolValue = !matchingParamFound;
             argumentProp.FindPropertyRelative(nameof(PersistentArgument._canBeDynamic)).boolValue = matchingParamFound;

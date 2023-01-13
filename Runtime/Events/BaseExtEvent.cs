@@ -178,7 +178,7 @@
 
         private static bool IsEligibleByParameters(ParameterInfo[] parameters, Type[] eventParamTypes)
         {
-            return parameters.Length <= 4 && parameters.All(param => ParamCanBeUsed(param.ParameterType, eventParamTypes));
+            return parameters.Length <= 6 && parameters.All(param => ParamCanBeUsed(param.ParameterType, eventParamTypes));
         }
 
         private static bool ParamCanBeUsed(Type paramType, Type[] eventParamTypes)

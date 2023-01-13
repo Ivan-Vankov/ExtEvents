@@ -46,6 +46,17 @@
         }
 
         [Preserve]
+        public static BaseInvokableCall CreateAction<T1, T2, T3, T4, T5>(object target, MethodInfo method) {
+            return new InvokableActionCall<T1, T2, T3, T4, T5>(target, method);
+        }
+
+        [Preserve]
+        public static BaseInvokableCall CreateAction<T1, T2, T3, T4, T5, T6>(object target, MethodInfo method)
+        {
+            return new InvokableActionCall<T1, T2, T3, T4, T5, T6>(target, method);
+        }
+
+        [Preserve]
         public static BaseInvokableCall CreateFunc<TResult>(object target, MethodInfo method)
         {
             return new InvokableFuncCall<TResult>(target, method);
@@ -72,6 +83,18 @@
         public static BaseInvokableCall CreateFunc<T1, T2, T3, T4, TResult>(object target, MethodInfo method)
         {
             return new InvokableFuncCall<T1, T2, T3, T4, TResult>(target, method);
+        }
+
+        [Preserve]
+        public static BaseInvokableCall CreateFunc<T1, T2, T3, T4, T5, TResult>(object target, MethodInfo method)
+        {
+            return new InvokableFuncCall<T1, T2, T3, T4, T5, TResult>(target, method);
+        }
+
+        [Preserve]
+        public static BaseInvokableCall CreateFunc<T1, T2, T3, T4, T5, T6, TResult>(object target, MethodInfo method)
+        {
+            return new InvokableFuncCall<T1, T2, T3, T4, T5, T6, TResult>(target, method);
         }
 
         [Preserve]
@@ -171,6 +194,40 @@
     }
 
     [Preserve]
+    public class InvokableActionCall<T1, T2, T3, T4, T5> : BaseInvokableCall
+    {
+        private readonly Action<T1, T2, T3, T4, T5> _delegate;
+
+        [Preserve]
+        public InvokableActionCall(object target, MethodInfo method) : base(target, method)
+        {
+            _delegate = (Action<T1, T2, T3, T4, T5>) Delegate.CreateDelegate(typeof(Action<T1, T2, T3, T4, T5>), target, method);
+        }
+
+        public override unsafe void Invoke(void*[] args)
+        {
+            _delegate(Unsafe.Read<T1>(args[0]), Unsafe.Read<T2>(args[1]), Unsafe.Read<T3>(args[2]), Unsafe.Read<T4>(args[3]), Unsafe.Read<T5>(args[4]));
+        }
+    }
+
+    [Preserve]
+    public class InvokableActionCall<T1, T2, T3, T4, T5, T6> : BaseInvokableCall
+    {
+        private readonly Action<T1, T2, T3, T4, T5, T6> _delegate;
+
+        [Preserve]
+        public InvokableActionCall(object target, MethodInfo method) : base(target, method)
+        {
+            _delegate = (Action<T1, T2, T3, T4, T5, T6>) Delegate.CreateDelegate(typeof(Action<T1, T2, T3, T4, T5, T6>), target, method);
+        }
+
+        public override unsafe void Invoke(void*[] args)
+        {
+            _delegate(Unsafe.Read<T1>(args[0]), Unsafe.Read<T2>(args[1]), Unsafe.Read<T3>(args[2]), Unsafe.Read<T4>(args[3]), Unsafe.Read<T5>(args[4]), Unsafe.Read<T6>(args[5]));
+        }
+    }
+
+    [Preserve]
     public class InvokableFuncCall<TReturn> : BaseInvokableCall
     {
         private readonly Func<TReturn> _delegate;
@@ -252,6 +309,37 @@
         public override unsafe void Invoke(void*[] args)
         {
             _delegate(Unsafe.Read<T1>(args[0]), Unsafe.Read<T2>(args[1]), Unsafe.Read<T3>(args[2]), Unsafe.Read<T4>(args[3]));
+        }
+    }
+
+    [Preserve]
+    public class InvokableFuncCall<T1, T2, T3, T4, T5, TReturn> : BaseInvokableCall
+    {
+        private readonly Func<T1, T2, T3, T4, T5, TReturn> _delegate;
+
+        [Preserve]
+        public InvokableFuncCall(object target, MethodInfo method) : base(target, method)
+        {
+            _delegate = (Func<T1, T2, T3, T4, T5, TReturn>) Delegate.CreateDelegate(typeof(Func<T1, T2, T3, T4, T5, TReturn>), target, method);
+        }
+
+        public override unsafe void Invoke(void*[] args)
+        {
+            _delegate(Unsafe.Read<T1>(args[0]), Unsafe.Read<T2>(args[1]), Unsafe.Read<T3>(args[2]), Unsafe.Read<T4>(args[3]), Unsafe.Read<T5>(args[4]));
+        }
+    }
+
+    [Preserve]
+    public class InvokableFuncCall<T1, T2, T3, T4, T5, T6, TReturn> : BaseInvokableCall {
+        private readonly Func<T1, T2, T3, T4, T5, T6, TReturn> _delegate;
+
+        [Preserve]
+        public InvokableFuncCall(object target, MethodInfo method) : base(target, method) {
+            _delegate = (Func<T1, T2, T3, T4, T5, T6, TReturn>)Delegate.CreateDelegate(typeof(Func<T1, T2, T3, T4, T5, T6, TReturn>), target, method);
+        }
+
+        public override unsafe void Invoke(void*[] args) {
+            _delegate(Unsafe.Read<T1>(args[0]), Unsafe.Read<T2>(args[1]), Unsafe.Read<T3>(args[2]), Unsafe.Read<T4>(args[3]), Unsafe.Read<T5>(args[4]), Unsafe.Read<T6>(args[5]));
         }
     }
 }

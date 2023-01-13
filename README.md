@@ -10,7 +10,7 @@ ExtEvents is a package that should replace UnityEvents in all your projects and 
 |                              | UnityEvent                                              | UltEvent                                  | ExtEvent                                                     |
 | ---------------------------- | ------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------ |
 | Serialized parameter types   | :x: A small number of types: Object, bool, string, etc. | :warning:More types: Enum, Vector2, Rect  | :white_check_mark: **Any serializable parameter shows up in the inspector with the correct UI** |
-| Number of parameters         | :x: 0 or 1                                              | :white_check_mark: Up to 4                | :white_check_mark: **Up to 4**                               |
+| Number of parameters         | :x: 0 or 1                                              | :white_check_mark: Up to 4                | :white_check_mark: **Up to 6**                               |
 | Static methods               | :x: No                                                  | :white_check_mark: Yes                    | :white_check_mark: **Yes**                                   |
 | Non-void methods             | :x: No                                                  | :warning:Yes                              | :white_check_mark: **Yes (+ smart filtration system)**       |
 | Non-public methods           | :x: No                                                  | :warning:Yes                              | :white_check_mark: **Yes (+ flexible options to show/hide such methods)** |
